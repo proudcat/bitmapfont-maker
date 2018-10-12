@@ -2,8 +2,9 @@
   "name": "bitmapfont-maker",
   "version": "0.1.0",
   "description": "bitmapfont maker",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,7 +26,10 @@
   },
   "homepage": "https://github.com/proudcat/bitmapfont-maker#readme",
   "dependencies": {
+    "async": "^2.6.1",
     "bin-pack": "^1.0.2",
+    "bootstrap": "^4.1.3",
+    "electron": "^3.0.4",
     "glob": "^7.1.3",
     "image-size": "^0.6.3",
     "mkdirp": "^0.5.1",
