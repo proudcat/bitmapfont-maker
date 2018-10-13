@@ -6,7 +6,7 @@
 
 ### get start
 * you'll need `nodejs` and `git` installed on you computer.
-* run command `git clone https://github.com/koalaylj/bitmap-font-maker.git`
+* run command `git clone https://github.com/proudcat/bitmapfont-maker.git`
 * run `cd bitmapfont-maker & npm install`
 * run `npm start`to start the tool.
 * set the `font images directory & output directory & fontName`:
