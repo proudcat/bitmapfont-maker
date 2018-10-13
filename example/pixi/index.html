@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Pixi</title>
+		<script src="pixi.js"></script>
+	</head>
+
+	<body>
+	</body>
+
+	<script>
+		var app = new PIXI.Application();
+		document.body.appendChild(app.view);
+
+		PIXI.loader
+			.add('fuck', '../export/fuck.xml')
+			.load(onAssetsLoaded);
+
+		function onAssetsLoaded() {
+			var bitmapFontText = new PIXI.extras.BitmapText('0', { font: '35px fuck', align: 'right' });
+			bitmapFontText.x = app.screen.width / 2
+			bitmapFontText.y = app.screen.height / 2
+			app.stage.addChild(bitmapFontText);
+			var count = 0;
+			app.ticker.add(function () {
+				count += 0.1;
+				bitmapFontText.text = Math.floor(count);
+			});
+
+		}
+	</script>
+
+</html>
