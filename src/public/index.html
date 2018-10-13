@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="UTF-8">
-  <title>BitmapFont Maker</title>
-  <style>
-    canvas {
-      /* border-style: solid;
-      border-width: 3px;
-      border:black; */
-    /* background: black */
-  }
-  </style>
-  <script src="../index.js" charset="utf-8"></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <title>BitmapFont Maker</title>
+    <script src="../index.js" charset="utf-8"></script>
+  </head>
 
-<body>
-  <div>
-    <div class="">
-      src: <textarea id="src" rows="1" cols="60"></textarea>
-      <br>
-      dest:
-      <textarea id="dest" rows="1" cols="60"></textarea>
-      <br>
-      <button type="button" id="export">export</button>
-    </div>
-
+  <body>
     <div>
-      <canvas id="canvas" width="800" height="600"></canvas>
+      <div class="">
+        font images directory: <textarea id="src" rows="1" cols="120"></textarea>
+        <br>
+        output directory:
+        <textarea id="dest" rows="1" cols="120"></textarea>
+        <br>
+        font name:
+        <textarea id="name" rows="1" cols="120">huakang</textarea>
+        <br>
+        <button type="button" id="export">export</button>
+      </div>
+
+      <div>
+        <canvas id="canvas" width="800" height="600"></canvas>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 
 </html>

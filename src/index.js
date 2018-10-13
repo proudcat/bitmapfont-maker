@@ -4,7 +4,7 @@ const glob = require('glob')
 const pack = require('bin-pack')
 const sizeOf = require('image-size')
 const xmlbuilder = require('xmlbuilder')
-// const mkdirp = require('mkdirp')
+const mkdirp = require('mkdirp')
 const async = require('async')
 
 let atlas = {
@@ -71,12 +71,12 @@ function loadImages(files, ctx) {
   return promise
 }
 
-function saveXML(dest, bins) {
+function saveXML(name, dest, bins) {
 
-  let filePath = path.join(dest, 'fuck.xml')
+  let filePath = path.join(dest, `${name}.xml`)
 
-  atlas.font.pages.page['@file'] = 'fuck.png'
-  atlas.font.info['@face'] = 'fuck'
+  atlas.font.pages.page['@file'] = `${name}.png`
+  atlas.font.info['@face'] = name
   atlas.font.chars.char = []
   atlas.font.chars['@count'] = bins.items.length
 
@@ -103,14 +103,12 @@ function saveXML(dest, bins) {
     if (err) {
       console.log('save [%s] error %s', filePath, err)
     } else {
-      console.log('extract xml ---> ', filePath)
+      console.log('saved xml ---> ', filePath)
     }
   })
 }
 
-function parse(src, dest) {
-
-  console.log('crop images from %s to %s', src, dest)
+function output(name, src, dest) {
 
   let pattern = src.endsWith('/') ? `${src}**/*.png` : `${src}/**/*.png`
 
@@ -145,30 +143,38 @@ function parse(src, dest) {
 
     let bins = pack(assets)
 
-    console.log(bins)
-
     let canvas = document.getElementById('canvas')
     let ctx = canvas.getContext('2d')
     canvas.width = bins.width
     canvas.height = bins.height
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    loadImages(bins.items, ctx).then(() => {
+    mkdirp(dest, err => {
+      if (err) {
+        alert('创建目录失败')
+        return
+      }
 
-      let base64Data = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '')
+      loadImages(bins.items, ctx).then(() => {
 
-      let imagePath = path.join(dest, 'fuck.png')
+        let base64Data = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '')
 
-      fs.writeFile(imagePath, base64Data, 'base64', function (err) {
-        if (err) {
-          console.log('save [%s] error %s', imagePath, err)
-        } else {
-          console.log('extract image ---> ', imagePath)
-        }
+        let imagePath = path.join(dest, `${name}.png`)
+
+        fs.writeFile(imagePath, base64Data, 'base64', function (err) {
+          if (err) {
+            console.log('save [%s] error %s', imagePath, err)
+          } else {
+            console.log('saved image ---> ', imagePath)
+          }
+        })
+      }).catch(err => {
+        console.error('加载图片失败')
       })
 
-      saveXML(dest, bins)
-    }).catch()
+      saveXML(name, dest, bins)
+
+    })
 
   })
 }
@@ -183,7 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('export').addEventListener('click', () => {
     let src = document.getElementById('src').value
     let dest = document.getElementById('dest').value
-    parse(src, dest)
+    let name = document.getElementById('name').value
+    output(name, src, dest)
   })
 
 }, false)

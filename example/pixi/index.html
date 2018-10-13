@@ -15,11 +15,11 @@
 		document.body.appendChild(app.view);
 
 		PIXI.loader
-			.add('fuck', '../export/fuck.xml')
+			.add('huakang', '../export/huakang.xml')
 			.load(onAssetsLoaded);
 
 		function onAssetsLoaded() {
-			var bitmapFontText = new PIXI.extras.BitmapText('0', { font: '35px fuck', align: 'right' });
+			var bitmapFontText = new PIXI.extras.BitmapText('0', { font: '50px huakang', align: 'right' });
 			bitmapFontText.x = app.screen.width / 2
 			bitmapFontText.y = app.screen.height / 2
 			app.stage.addChild(bitmapFontText);
