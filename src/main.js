@@ -9,9 +9,14 @@ let _mainWindow
 
 
 function ready() {
+
   _mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720
+    minWidth: 800,
+    minHeight: 600,
+    // webPreferences: {
+    //   nodeIntegration: false,
+    //   preload: '../index.js'
+    // }
   })
 
   _mainWindow.loadURL(`file://${__dirname}/public/index.html`)
@@ -22,6 +27,8 @@ function ready() {
   _mainWindow.on('closed', function () {
     _mainWindow = null
   })
+
+  _mainWindow.maximize()
 }
 
 app.on('ready', ready)

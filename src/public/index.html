@@ -4,27 +4,53 @@
   <head>
     <meta charset="UTF-8">
     <title>BitmapFont Maker</title>
+
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="main.css">
+
+    <!-- http://bootswatch.com/slate/ -->
+    <script>
+      if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
+    <script>
+      if (window.module) {
+        module = window.module;
+      }
+    </script>
+
     <script src="../index.js" charset="utf-8"></script>
   </head>
 
-  <body>
-    <div>
-      <div class="">
-        font images directory: <textarea id="src" rows="1" cols="120"></textarea>
-        <br>
-        output directory:
-        <textarea id="dest" rows="1" cols="120"></textarea>
-        <br>
-        font name:
-        <textarea id="name" rows="1" cols="120">huakang</textarea>
-        <br>
-        <button type="button" id="export">export</button>
-      </div>
+  <body class="box">
+    <header>
+      <button class="toolbox" id="import">import</button>
+      <button class="toolbox" id="export">export</button>
+    </header>
+    <aside>
+      <div id="tree" class="tree">
+        <ul>
 
-      <div>
-        <canvas id="canvas" width="800" height="600"></canvas>
+          <li class="folder">
+            <span class="folder-title">系统管理</span>
+            <ul id="xxx">
+              <li class="file"><span>部门管理</span> <i class="char" onkeypress="return (this.innerText.length < 1)"
+                  contenteditable="true">q</i> </li>
+              <li class="file"><span>岗位管理</span><i class="char" contenteditable="true">w</i></li>
+              <li class="file"><span>用户管理</span><i class="char" contenteditable="true">e</i></li>
+            </ul>
+          </li>
+
+        </ul>
       </div>
-    </div>
+    </aside>
+    <main>
+      <canvas id="canvas" class="canvas"></canvas>
+    </main>
+    <footer id="footer">
+    </footer>
   </body>
 
 </html>

@@ -1,11 +1,24 @@
 const fs = require('fs')
 const path = require('path')
-const glob = require('glob')
-const pack = require('bin-pack')
+const glob = require('fast-glob')
+const binPack = require('bin-pack')
 const sizeOf = require('image-size')
 const xmlbuilder = require('xmlbuilder')
-const mkdirp = require('mkdirp')
 const async = require('async')
+
+let $export, $footer
+
+const {
+  remote
+} = require('electron')
+
+/**
+ * input output settings
+ */
+let settings = {
+  src: new Map(), //directories of font images
+  bins: null
+}
 
 let atlas = {
   font: {
@@ -48,10 +61,16 @@ let atlas = {
   }
 }
 
-function loadImages(files, ctx) {
+function preview() {
+
+  let canvas = document.getElementById('canvas')
+  let ctx = canvas.getContext('2d')
+  canvas.width = settings.bins.width
+  canvas.height = settings.bins.height
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   let promise = new Promise((resolve, reject) => {
-    async.each(files, (file, next) => {
+    async.each(settings.bins.items, (file, next) => {
       let img = new Image()
       img.onload = function () {
         ctx.drawImage(img, 0, 0, file.width, file.height, file.x, file.y, file.width, file.height)
@@ -63,6 +82,7 @@ function loadImages(files, ctx) {
       if (err) {
         reject()
       } else {
+        $export.disabled = false
         resolve()
       }
     })
@@ -71,16 +91,17 @@ function loadImages(files, ctx) {
   return promise
 }
 
-function saveXML(name, dest, bins) {
+function saveXML(dir, name) {
 
-  let filePath = path.join(dest, `${name}.xml`)
+  let filePath = path.join(dir, `${name}.xml`)
+  let letters = settings.bins.items
 
   atlas.font.pages.page['@file'] = `${name}.png`
   atlas.font.info['@face'] = name
   atlas.font.chars.char = []
-  atlas.font.chars['@count'] = bins.items.length
+  atlas.font.chars['@count'] = letters.length
 
-  bins.items.forEach((e) => {
+  letters.forEach((e) => {
     let char = {
       '@id': e.item.name.charCodeAt(0),
       '@x': e.x,
@@ -108,17 +129,29 @@ function saveXML(name, dest, bins) {
   })
 }
 
-function output(name, src, dest) {
+function saveImage(dir, name) {
 
-  let pattern = src.endsWith('/') ? `${src}**/*.png` : `${src}/**/*.png`
+  let canvas = document.getElementById('canvas')
 
-  glob(pattern, {
-    dot: true
-  }, function (err, files) {
+  let base64Data = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '')
 
-    let assets = []
+  let imagePath = path.join(dir, `${name}.png`)
 
-    files.forEach(file => {
+  fs.writeFile(imagePath, base64Data, 'base64', function (err) {
+    if (err) {
+      console.log('save [%s] error %s', imagePath, err)
+    } else {
+      console.log('saved image ---> ', imagePath)
+    }
+  })
+}
+
+function pack() {
+
+  let letters = []
+
+  for (let [dir, images] of settings.src) {
+    images.forEach(file => {
 
       /** path.parse();
       ┌─────────────────────┬────────────┐
@@ -132,65 +165,134 @@ function output(name, src, dest) {
       let parsed_file = path.parse(file)
       let dimensions = sizeOf(file)
 
-      assets.push({
+      letters.push({
         width: dimensions.width,
         height: dimensions.height,
         path: file,
         name: parsed_file.name
       })
-
     })
+  }
 
-    let bins = pack(assets)
 
-    let canvas = document.getElementById('canvas')
-    let ctx = canvas.getContext('2d')
-    canvas.width = bins.width
-    canvas.height = bins.height
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    mkdirp(dest, err => {
-      if (err) {
-        alert('创建目录失败')
-        return
-      }
+  settings.bins = binPack(letters)
+}
 
-      loadImages(bins.items, ctx).then(() => {
+function importEventHandler() {
 
-        let base64Data = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '')
+  let dirs = remote.dialog.showOpenDialog({
+    properties: ['openDirectory', 'multiSelections', 'treatPackageAsDirectory']
+  })
 
-        let imagePath = path.join(dest, `${name}.png`)
+  console.log('dir', dirs)
 
-        fs.writeFile(imagePath, base64Data, 'base64', function (err) {
-          if (err) {
-            console.log('save [%s] error %s', imagePath, err)
-          } else {
-            console.log('saved image ---> ', imagePath)
-          }
-        })
+  if (dirs && dirs.length > 0) {
+
+    async.each(dirs, (dir, next) => {
+
+      //bug fast-glob  *.png cannot match ..png file
+      let pattern = dir.endsWith('/') ? `${dir}**/\(\.|*).png` : `${dir}/**/(\.|*).png`
+
+      glob(pattern, {
+        dot: true
+      }).then(files => {
+        settings.src.set(dir, files)
+        console.log(settings.src.get(dir))
+        next()
       }).catch(err => {
-        console.error('加载图片失败')
+        console.error('err', err)
       })
 
-      saveXML(name, dest, bins)
-
+    }, function (err) {
+      if (err) {
+        console.log('import error', dirs)
+      } else {
+        $export.disabled = false
+        pack()
+        preview()
+        udpateTree()
+      }
     })
+
+    // //bug fast-glob  *.png cannot match ..png file
+    // let patterns = dir.map(item => item.endsWith('/') ? `${item}**/\(\.|*).png` : `${item}/**/(\.|*).png`)
+
+    // glob(patterns, {
+    //   dot: true
+    // }).then(files => {
+    //   settings.src.set(dir, files)
+    //   console.log(settings.src.get(dir))
+
+    //   pack(files)
+    //   preview()
+    //   udpateTree()
+
+    //   $export.disabled = false
+    // }).catch(err => {
+    //   console.error('err', err)
+    // })
+
+  } else {
+    alert('please select a directory!')
+  }
+}
+
+function udpateTree() {
+
+  let treeData = []
+  for (let [dir, images] of settings.src) {
+    console.log('---->', dir, images)
+    let parsed_dir = path.parse(dir)
+    let parent = {
+      text: parsed_dir.name,
+      id: dir,
+      icon: 'fa fa-cube',
+      selectedIcon: 'glyphicon glyphicon-stop',
+      expandIcon: 'fa fa-angle-right',// 展开图标
+      collapseIcon: 'fa fa-angle-down',// 收缩图标
+      nodes: []
+    }
+
+    images.forEach(image => {
+      let parsed_image = path.parse(image)
+
+      parent.nodes.push({
+        text: parsed_image.name,
+        id: image,
+        icon: 'circle'
+      })
+    })
+
+    treeData.push(parent)
+  }
+
+}
+
+function exportEventHandler() {
+
+  remote.dialog.showSaveDialog({ title: 'save bitmapfont files' }, (fileName) => {
+
+    let dest = path.parse(fileName)
+
+    saveImage(dest.dir, dest.name)
+    saveXML(dest.dir, dest.name)
 
   })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  let srcPath = document.getElementById('src')
-  let destPath = document.getElementById('dest')
-  srcPath.value = path.join(__dirname, '../../', 'example', 'font')
-  destPath.value = path.join(__dirname, '../../', 'example', 'export')
+  window.eval = global.eval = function () {
+    throw new Error('Sorry, this app does not support window.eval().')
+  }
 
-  document.getElementById('export').addEventListener('click', () => {
-    let src = document.getElementById('src').value
-    let dest = document.getElementById('dest').value
-    let name = document.getElementById('name').value
-    output(name, src, dest)
-  })
+  let $import = document.getElementById('import')
+  $export = document.getElementById('export')
+  $footer = document.getElementById('footer')
 
-}, false)
+  $export.disabled = true
+
+  $import.addEventListener('click', importEventHandler)
+  $export.addEventListener('click', exportEventHandler)
+})
