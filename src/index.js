@@ -12,6 +12,21 @@ const {
   remote
 } = require('electron')
 
+const CODE_MAP = {
+  dot: '.',
+  点: '.',
+  colon: ':',
+  冒号: ':',
+  semicolon: ';',
+  分号: ';',
+  percent: '%',
+  百分号: '%',
+  d_quot: '"',
+  双引号: '"',
+  s_quot: '\'',
+  单引号: '\'',
+}
+
 /**
  * input output settings
  */
@@ -242,7 +257,6 @@ function udpateTree() {
 
   let treeData = []
   for (let [dir, images] of settings.src) {
-    console.log('---->', dir, images)
     let parsed_dir = path.parse(dir)
     let parent = {
       text: parsed_dir.name,
