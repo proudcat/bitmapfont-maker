@@ -309,4 +309,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $import.addEventListener('click', importEventHandler)
   $export.addEventListener('click', exportEventHandler)
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!'
+    }
+  })
+
+  var app4 = new Vue({
+    el: '#explorer',
+    data: {
+      todos: [
+        { text: '学习 JavaScript' },
+        { text: '学习 Vue' },
+        { text: '整个牛项目' }
+      ]
+    }
+  })
 })

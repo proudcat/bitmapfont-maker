@@ -19,6 +19,31 @@ function onKeyPress() {
   // this.preventDefault()
 }
 
+function createFolder() {
+
+}
+
+function append(data) {
+
+  data
+
+  let folder = `
+    <li class="folder">
+      <span class="folder-title">${data.key}</span>
+      <ul id="${data.path}">
+
+      </ul>
+    </li>
+    `
+
+  let leaf = `<li class="file"><span>${data.name}</span><i class="char" contenteditable="true">${data.code}</i></li>`
+
+
+
+
+}
+
+
 module.exports = {
   add: function (data) {
 
