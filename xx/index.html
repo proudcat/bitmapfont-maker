@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link rel="stylesheet" href="main.css">
+
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="index.js" type="text/javascript" charset="utf-8"></script>
+
+    <template id="header-template">
+      <div>
+        <button class="header-button" @click="add">add</button>
+        <button class="header-button" @click="save">save</button>
+      </div>
+    </template>
+
+    <template id="explorer-template">
+      <div>
+        <div>
+          explorer
+        </div>
+      </div>
+    </template>
+
+
+    <template id="content-template">
+      <div>
+        <div>
+          content
+        </div>
+      </div>
+    </template>
+
+
+    <template id="footer-template">
+      <div>
+      </div>
+    </template>
+
+  </head>
+
+  <body>
+    <div id="app" class="app">
+      <app-header class="header">
+      </app-header>
+
+      <div class="center">
+        <app-explorer class="explorer">
+
+        </app-explorer>
+        <!-- <div draggable="true" class="splitter">
+
+        </div> -->
+        <app-content class="content">
+
+        </app-content>
+      </div>
+
+      <app-footer class="footer">
+      </app-footer>
+    </div>
+
+
+    <!-- 
+
+    <aside>
+      <div id="explorer" class="explorer">
+        <ul>
+          <li class="folder">
+            <span class="folder-title">系统管理</span>
+          <li class="file" v-for="todo in todos">
+            <span>{{ todo.text }}</span> <i class="char" contenteditable="true">q</i>
+          </li>
+          </li>
+
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <canvas id="canvas" class="canvas"></canvas>
+      <div id="app">
+        {{ message }}
+      </div>
+    </main>
+
+    <footer id="footer">
+    </footer>
+   -->
+
+
+  </body>
+
+</html>
