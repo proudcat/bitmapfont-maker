@@ -4,13 +4,16 @@
 ### screen shot
 ![hehe](./doc/screenshot.png)
 
+![output](./doc/output.png)
+
 ### get start
+
 * you'll need `nodejs` and `git` installed on you computer.
 * run command `git clone https://github.com/proudcat/bitmapfont-maker.git`
 * run `cd bitmapfont-maker & npm install`
 * run `npm start`to start the tool.
-* set the `font images directory & output directory & fontName`:
-* click `export button` to create bitmapfont files(.png & .xml).
+* click `import`button to select  font image directory(0.png,1.png)
+* click `export` button to create bitmapfont file(.png & .xml).
 
 ### tips
 * image file name is the letter of the font(1.png,a.png,好.png,ス.png).

@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <title>test</title>
-  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="style/main.css">
 
-  <script src="vue.js" type="text/javascript" charset="utf-8"></script>
-  <script src="index.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/vue.js" type="text/javascript" charset="utf-8"></script>
+  <script src="render/index.js" type="text/javascript" charset="utf-8"></script>
 
   <template id="header-template">
     <div>
@@ -47,7 +47,7 @@
     <div class="center">
       <app-explorer class="explorer">
       </app-explorer>
-      <div id="splitter-handler" draggable="true" class="splitter" ondragstart="drag(event)">
+      <div id="splitter" draggable="true" class="splitter">
       </div>
       <app-content class="content">
       </app-content>

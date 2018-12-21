@@ -4,9 +4,9 @@
   <head>
     <meta charset="UTF-8">
     <title>BitmapFont Maker</title>
-    <link rel="stylesheet" href="main.css">
-    <script src="../lib/vue.js"></script>
-    <script src="../index.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="style/main.1.css">
+    <script src="lib/vue.js"></script>
+    <script src="render/index.1.js" charset="utf-8"></script>
   </head>
 
   <body class="box">
@@ -16,15 +16,14 @@
     </header>
     <aside>
       <div id="explorer" class="explorer">
-        <ul>
+        <!-- <ul>
           <li class="folder">
             <span class="folder-title">系统管理</span>
           <li class="file" v-for="todo in todos">
             <span>{{ todo.text }}</span> <i class="char" contenteditable="true">q</i>
           </li>
           </li>
-
-        </ul>
+        </ul> -->
 
         <!-- 
           <ul>
@@ -46,7 +45,7 @@
     <main>
       <canvas id="canvas" class="canvas"></canvas>
       <div id="app">
-        {{ message }}
+        <!-- {{ message }} -->
       </div>
     </main>
     <footer id="footer">

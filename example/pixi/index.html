@@ -15,18 +15,18 @@
 		document.body.appendChild(app.view);
 
 		PIXI.loader
-			.add('huakang', '../export/huakang.xml')
+			.add('snow', '../export/snow.xml')
 			.load(onAssetsLoaded);
 
 		function onAssetsLoaded() {
-			var bitmapFontText = new PIXI.extras.BitmapText('0', { font: '50px huakang', align: 'right' });
+			var bitmapFontText = new PIXI.extras.BitmapText('0', { font: '50px snow', align: 'right' });
 			bitmapFontText.x = app.screen.width / 2
 			bitmapFontText.y = app.screen.height / 2
 			app.stage.addChild(bitmapFontText);
 			var count = 0;
 			app.ticker.add(function () {
 				count += 0.1;
-				bitmapFontText.text = Math.floor(count);
+				bitmapFontText.text = Math.floor(count) + 's';
 			});
 
 		}

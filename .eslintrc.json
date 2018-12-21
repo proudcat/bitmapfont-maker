@@ -32,7 +32,7 @@
   "globals": {
     "PIXI": true,
     "io": true,
-    "tweenjs": true,
+    "Vue": true,
     "FontFaceObserver": true
   }
 }

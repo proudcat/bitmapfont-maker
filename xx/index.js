@@ -1,3 +1,4 @@
+
 Vue.component('app-header', {
   template: '#header-template',
   methods: {
